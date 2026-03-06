@@ -2,6 +2,12 @@ const express = require('express'); // On importe express depuis node_modules.
 
 const app = express(); // On créer une app express.
 
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb+srv://sara_mongoDB:mdpmongoDBatlas123@cluster0.ga5ywej.mongodb.net/?appName=Cluster0')
+.then(() => console.log('Connexion à MongoDB réussie !'))
+.catch(() => console.log('Connexion à MongoDB échouée !'));
+
 // Middleware qui permet de lire le JSON envoyé dans les requêtes
 app.use(express.json());
 
@@ -35,6 +41,7 @@ app.use('/api/books', (req, res, next) => {
     }
   ];
   res.status(200).json(books);
+  next (); 
 });
 
 // ROUTE POST : créer un livre
