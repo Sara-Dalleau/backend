@@ -1,20 +1,26 @@
-const express = require('express'); // On importe express depuis node_modules.
-const app = express(); // On créer une app express.
+// Import du framework Express depuis node_modules
+const express = require('express');
+// Création de l'application Express
+const app = express();
+// Import de mongoose pour communiquer avec MongoDB
 const mongoose = require('mongoose');
+// Charge les variables d'environnement du fichier .env
+require('dotenv').config();
+// Import des routes liées aux livres
+const bookRoutes = require('./routes/books');
 
-const Book = require('./models/Book');
 
-// Connexion à la base de données MongoDB Atlas.
-mongoose.connect('mongodb+srv://sara_mongoDB:mdpmongoDBatlas123@cluster0.ga5ywej.mongodb.net/?appName=Cluster0')
-// Si la connexion fonctionne :
-.then(() => console.log('Connexion à MongoDB réussie !'))
-// Si la connexion échoue :
-.catch(() => console.log('Connexion à MongoDB échouée !'));
+// CONNEXION A MONGODB ATLAS
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log('Connexion à MongoDB réussie !')) // Si la connexion fonctionne
+.catch(() => console.log('Connexion à MongoDB échouée !')); // Si la connexion échoue
 
-// Middleware qui permet de lire le JSON envoyé dans les requêtes
+
+// MIDDLEWARE JSON : permet de lire le JSON envoyé dans les requêtes
 app.use(express.json());
 
-// Middleware CORS : permet au frontend (localhost:4200) de communiquer avec le backend (localhost:3000)
+
+// MIDDLEWARE: permet au frontend (localhost:4200) de communiquer avec le backend (localhost:3000)
 app.use((req, res, next) => {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,44 +31,13 @@ app.use((req, res, next) => {
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, PUT, DELETE, PATCH, OPTIONS'
-  )
-  next(); // on passe au middleware suivant
+  );
+  // On passe au middleware suivant
+  next();
 });
 
-// ROUTE GET : récupérer les livres
-app.get('/api/books', (req, res, next) => {
+// ROUTES DE L'API: toutes les routes qui commencent par /api/books, seront gérées dans routes/books.js
+app.use('/api/books', bookRoutes);
 
-  Book.find()
-
-    .then(books => res.status(200).json(books))
-
-    .catch(error => res.status(400).json({ error }));
-});
-
-//ROUTE GET PAR id
-app.get('/api/books/:id', (req, res, next) => {
-
-  Book.findOne({ _id: req.params.id })
-
-    .then(book => res.status(200).json(book))
-
-    .catch(error => res.status(404).json({ error }));
-
-});
-
-// ROUTE POST : créer un livre
-app.post('/api/books', (req, res, next) => {
-
-  delete req.body._id;
-
-  const book = new Book({
-    ...req.body
-  });
-
-  book.save()
-    .then(() => res.status(201).json({ message: 'Livre enregistré !' }))
-    .catch(error => res.status(400).json({ error }));
-
-});
-
-module.exports = app; //export de l'app pour pouvoir y accéder depuis autres fichiers.
+// Export de l'application, pour pouvoir l'utiliser dans server.js
+module.exports = app;
