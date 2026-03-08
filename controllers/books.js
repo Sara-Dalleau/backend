@@ -3,9 +3,11 @@ const Book = require('../models/Book');
 
 
 // GET : récupérer tous les livres
+
+// si quelqu'un appelle GET /api/books alors execute la fonction getAllBooks du controller
 exports.getAllBooks = (req, res, next) => {
 
-  Book.find()
+  Book.find() // utilise le model
 
     .then(books => res.status(200).json(books))
     .catch(error => res.status(400).json({ error }));

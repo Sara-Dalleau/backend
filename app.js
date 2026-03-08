@@ -9,16 +9,16 @@ require('dotenv').config();
 // Import des routes liées aux livres
 const bookRoutes = require('./routes/books');
 
+const userRoutes = require('./routes/user');
+
 
 // CONNEXION A MONGODB ATLAS
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('Connexion à MongoDB réussie !')) // Si la connexion fonctionne
 .catch(() => console.log('Connexion à MongoDB échouée !')); // Si la connexion échoue
 
-
 // MIDDLEWARE JSON : permet de lire le JSON envoyé dans les requêtes
 app.use(express.json());
-
 
 // MIDDLEWARE: permet au frontend (localhost:4200) de communiquer avec le backend (localhost:3000)
 app.use((req, res, next) => {
@@ -36,8 +36,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// ROUTES DE L'API: toutes les routes qui commencent par /api/books, seront gérées dans routes/books.js
-app.use('/api/books', bookRoutes);
+// ROUTES DE L'API
+app.use('/api/books', bookRoutes); // si quelqu'un appelle /api/books, envoie la requête au router
+app.use('/api/auth', userRoutes);
+
 
 // Export de l'application, pour pouvoir l'utiliser dans server.js
 module.exports = app;
