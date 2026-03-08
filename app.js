@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 // Import des routes liées aux livres
 const bookRoutes = require('./routes/books');
-
+// Import des routes d'authentification (signup / login)
 const userRoutes = require('./routes/user');
 
 
@@ -37,7 +37,11 @@ app.use((req, res, next) => {
 });
 
 // ROUTES DE L'API
+
+// Routes pour gérer les livres
 app.use('/api/books', bookRoutes); // si quelqu'un appelle /api/books, envoie la requête au router
+
+// Routes pour l'authentification
 app.use('/api/auth', userRoutes);
 
 
