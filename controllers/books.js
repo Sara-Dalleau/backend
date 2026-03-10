@@ -15,7 +15,7 @@ exports.getAllBooks = (req, res, next) => {
 
 };
 
-// GET : récupérer un livre par son id
+// GET : récupérer un livre par son id.
 exports.getOneBook = (req, res, next) => {
 
   // Recherche un livre grâce à son id
@@ -90,7 +90,7 @@ exports.deleteBook = (req, res, next) => {
       // Vérifie que l'utilisateur est bien le propriétaire
       if (book.userId != req.auth.userId) {
         res.status(401).json({ message: 'Non autorisé' });
-        
+
       } else {
         // Récupère le nom du fichier image
         const filename = book.imageUrl.split('/images/')[1];
