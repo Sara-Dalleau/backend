@@ -10,6 +10,8 @@ require('dotenv').config();
 const bookRoutes = require('./routes/books');
 // Import des routes d'authentification (signup / login)
 const userRoutes = require('./routes/user');
+// Import path: permet de manipuler chemins fichiers correctement
+const path = require('path');
 
 
 // CONNEXION A MONGODB ATLAS
@@ -36,8 +38,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// ROUTES DE L'API
+// Middleware qui rend accessible le dossier "images" du serveur.
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
+// ROUTES DE L'API
 // Routes pour gérer les livres
 app.use('/api/books', bookRoutes); // si quelqu'un appelle /api/books, envoie la requête au router
 
