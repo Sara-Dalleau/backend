@@ -12,14 +12,20 @@ const multer = require('../middleware/multer-config');
 
 // ROUTE CRUD
 
+// Meilleurs livres
+router.get('/bestrating', booksCtrl.getBestRatedBooks);
+
 // GET : récupérer tous les livres
-router.get('/', auth, booksCtrl.getAllBooks); // appelle la fonction du controller
+router.get('/',booksCtrl.getAllBooks); // appelle la fonction du controller
 
 // GET : récupérer un livre spécifique
-router.get('/:id',auth, booksCtrl.getOneBook);
+router.get('/:id',booksCtrl.getOneBook);
 
 // POST : créer un nouveau livre
 router.post('/', auth, multer, booksCtrl.createBook);
+
+// POST : ajouter une note à un livre
+router.post('/:id/rating', auth, booksCtrl.rateBook);
 
 // PUT : modifier un livre
 router.put('/:id', auth, booksCtrl.modifyBook);

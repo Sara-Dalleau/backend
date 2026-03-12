@@ -3,8 +3,24 @@ const Book = require('../models/Book');
 
 const fs = require('fs');
 
+
+// GET: récupérer les livres les mieux notés
+exports.getBestRatedBooks = (req, res, next) => {
+
+  Book.find()
+
+    // trier par note décroissante
+    .sort({ averageRating: -1 })
+
+    // limiter aux 3 meilleurs
+    .limit(3)
+
+    .then(books => res.status(200).json(books))
+    .catch(error => res.status(400).json({ error }));
+
+};
+
 // GET : récupérer tous les livres
-// si quelqu'un appelle GET /api/books alors execute la fonction getAllBooks du controller
 exports.getAllBooks = (req, res, next) => {
 
   // Recherche tous les livres dans la base de données
@@ -48,6 +64,54 @@ exports.createBook = (req, res, next) => {
     .then(() => res.status(201).json({ message: 'Livre enregistré !' }))
     .catch(error => res.status(400).json({ error }));
 };
+
+// Fonction ajout note à un livre
+exports.rateBook = (req, res, next) => {
+
+  // récupère l'id de l'utilisateur depuis le token JWT
+  const userId = req.auth.userId;
+  // récupère la note envoyée dans le body
+  const grade = req.body.rating;
+
+  // recherche le livre dans la base avec son id
+  Book.findOne({ _id: req.params.id })
+
+    .then(book => {
+
+      // vérifier si l'utilisateur a déjà noté
+      const alreadyRated = book.ratings.find(
+        rating => rating.userId === userId
+      );
+
+      // si l'utilisateur a déjà noté on bloque
+      if (alreadyRated) {
+
+        return res.status(400).json({ message: "Livre déjà noté par cet utilisateur" });
+
+      }
+
+      // ajouter la nouvelle note dans ratings []
+      book.ratings.push({
+        userId: userId,
+        grade: grade
+      });
+
+      // calcule la somme de toutes les notes
+      const total = book.ratings.reduce((sum, rating) => sum + rating.grade, 0);
+      // calcule la moyenne
+      book.averageRating = total / book.ratings.length;
+
+      // sauvegarde livre dans la base
+      book.save()
+        // renvoie le livre mis à jour
+        .then(updatedBook => res.status(200).json(updatedBook))
+        .catch(error => res.status(400).json({ error }));
+
+    })
+    // erreur si le livre n'est pas trouvé
+    .catch(error => res.status(404).json({ error }));
+};
+
 
 // PUT : modifier un livre
 exports.modifyBook = (req, res, next) => {

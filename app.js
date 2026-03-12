@@ -43,7 +43,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // ROUTES DE L'API
 // Routes pour gérer les livres
-app.use('/api/books', bookRoutes); // si quelqu'un appelle /api/books, envoie la requête au router
+app.use('/api/books', bookRoutes); // Toutes les requêtes commençant par /api/books sont redirigées vers le routeur books
 
 // Routes pour l'authentification
 app.use('/api/auth', userRoutes);

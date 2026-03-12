@@ -3,7 +3,7 @@ const app = require('./app'); // Import de notre application Express depuis le f
 
 // On définit le port sur lequel le serveur va écouter.
 // Si une variable d'environnement PORT existe > on l'utilise sinon > on utilise le port 3000.
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // On enregistre le port dans la configuration de l'application Express.
 // Express peut ensuite récupérer cette information si besoin.
