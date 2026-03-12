@@ -77,7 +77,6 @@ exports.rateBook = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
 
     .then(book => {
-
       // vérifier si l'utilisateur a déjà noté
       const alreadyRated = book.ratings.find(
         rating => rating.userId === userId
@@ -85,9 +84,7 @@ exports.rateBook = (req, res, next) => {
 
       // si l'utilisateur a déjà noté on bloque
       if (alreadyRated) {
-
         return res.status(400).json({ message: "Livre déjà noté par cet utilisateur" });
-
       }
 
       // ajouter la nouvelle note dans ratings []
@@ -168,7 +165,5 @@ exports.deleteBook = (req, res, next) => {
         });
       }
     })
-
     .catch(error => res.status(500).json({ error }));
-
 };

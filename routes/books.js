@@ -12,7 +12,7 @@ const multer = require('../middleware/multer-config');
 
 // ROUTE CRUD
 
-// Meilleurs livres
+// GET: récuperer les "meilleurs livres"
 router.get('/bestrating', booksCtrl.getBestRatedBooks);
 
 // GET : récupérer tous les livres
