@@ -6,10 +6,10 @@ module.exports = (req, res, next) => {
     // récupérer le token dans le header Authorization
     const token = req.headers.authorization.split(' ')[1];
 
-    // vérifier le token
+    // vérifie token valide 
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
 
-    // récupérer le userId
+    // récupérer le userId dans token 
     const userId = decodedToken.userId;
 
     // ajouter l'id utilisateur à la requête
